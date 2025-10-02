@@ -1,0 +1,141 @@
+---
+title: Sports
+pagination:
+  data: sportsp
+  size: 5
+  alias: articles
+permalink: /pages/Sports/{% if pagination.pageNumber > 0 %}page/{{ pagination.pageNumber + 1 }}/{% endif %}
+---
+<!DOCTYPE html>
+<html lang="en">
+1<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  {% include "header.njk" %}
+
+  <main class="category-page sports-page container">
+    <div class="category-header">
+      <h1 class="category-title">{{ title }}</h1>
+    </div>
+
+    <div class="content-grid">
+      <!-- MAIN COLUMN -->
+      <div class="main-column">
+
+        {# === Main Featured Article === #}
+        {% if articles and articles.length %}
+        {% set featured = articles | random %}
+        <section class="main-featured">
+          <article class="featured-article">
+            <div class="featured-image">
+              <a href="{{ featured.url }}">
+                <img src="{{ featured.image or '/assets/images/news/default.jpg' }}" alt="{{ featured.title }}">
+              </a>
+            </div>
+            <div class="featured-content">
+              <h2 class="featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
+              <div class="meta">
+                <span>By Admin</span>
+                <span>{{ featured.date | readableDate }}</span>
+              </div>
+              <p class="excerpt">{{ featured.description }}</p>
+            </div>
+
+            <!-- 🔑 Modal body -->
+            <template class="article-body">
+              {{ (featured.body or featured.description) | safe }}
+            </template>
+          </article>
+        </section>
+        {% endif %}
+
+        {# === Other Articles === #}
+        <section class="articles-list">
+          {% for article in articles %}
+            {% if article != featured %}
+            <article class="article-card">
+              <div class="article-image">
+                <a href="{{ article.url }}">
+                  <img src="{{ article.image or '/assets/images/news/default.jpg' }}" alt="{{ article.title }}">
+                </a>
+              </div>
+              <div class="article-content">
+                <h2 class="article-title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+                <div class="meta">
+                  <span>By Admin</span>
+                  <span>{{ featured.date | readableDate }}</span>
+                </div>
+                <p class="excerpt">{{ article.description }}</p>
+              </div>
+
+              <!-- 🔑 Modal body -->
+              <template class="article-body">
+                {{ (article.body or article.description) | safe }}
+              </template>
+            </article>
+            {% endif %}
+          {% endfor %}
+        </section>
+
+        {# === Pagination === #}
+        {% if pagination.pages.length > 1 %}
+        <nav class="pagination">
+          {% if pagination.href.previous %}
+            <a href="{{ pagination.href.previous }}" class="prev">← Previous</a>
+          {% endif %}
+          <span>Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}</span>
+          {% if pagination.href.next %}
+            <a href="{{ pagination.href.next }}" class="next">Next →</a>
+          {% endif %}
+        </nav>
+        {% endif %}
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        {% include "sports-widget.njk" %}
+
+        {# === Standings Widget === #}
+        <div class="widget">
+          <div id="scoreaxis-widget-f2272" style="border-width:1px;border-color:rgba(0, 0, 0, 0.15);border-style:solid;border-radius:8px;padding:10px;background:rgb(255, 255, 255);width:100%;background-color:#000000"><iframe id="Iframe" src="https://www.scoreaxis.com/widget/standings-widget/8?autoHeight=1&amp;borderColor=%23000000&amp;bodyBackground=%23000000&amp;textColor=%23ffffff&amp;inst=f2272" style="width:100%;border:none;transition:all 300ms ease"></iframe><script>window.addEventListener("DOMContentLoaded",event=>{window.addEventListener("message",event=>{if(event.data.appHeight&&"f2272"==event.data.inst){let container=document.querySelector("#scoreaxis-widget-f2272 iframe");container&&(container.style.height=parseInt(event.data.appHeight)+"px")}},!1)});</script></div><div style="font-size: 12px; font-family: Arial, sans-serif; text-align: left;">Data provided by <a target="_blank" href="https://www.scoreaxis.com/">Scoreaxis</a></div>
+        </div>
+
+        <div class="widget">
+          <h2>FEATURED ARTICLES</h2>
+          <ul class="sidebar-list">
+            {% for article in sportsp.slice(0, 4) %}
+            <li>
+              <a href="{{ article.url }}">
+                <img src="{{ article.image or '/assets/images/news/default.jpg' }}" alt="{{ article.title }}">
+                <span>{{ article.title }}</span>
+              </a>
+
+              <!-- 🔑 Modal body -->
+              <template class="article-body">
+                {{ (article.body or article.description) | safe }}
+              </template>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+
+      </aside>
+    </div>
+  </main>
+
+  {% include "footer.njk" %}
+
+  <!-- Site Scripts -->
+  <script src="/scripts/main.js"></script>
+  <script src="/scripts/article-modal.js"></script>
+  <script src="https://darkskyapp.github.io/skycons/skycons.js"></script>
+
+</body>
+</html>
